@@ -4,7 +4,9 @@ import Base.Lexico;
 
 public class Main {
     public static void main(String[] args) {
-        String codigoFonte = "int x = 10 + 20;";
+//       String codigoFonte = "i if IF int x = 10 + 20; 01";
+//        String codigoFonte = "20;";
+        String codigoFonte = "2 eu sou a lenda IF if E else";
 
         Lexico lexico = new Lexico();
         String resultadoAnalise = lexico.analisa(codigoFonte);

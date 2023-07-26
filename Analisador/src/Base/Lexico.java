@@ -23,15 +23,15 @@ public class Lexico {
     }
 
     public static String getDefineIdentificadores() {
-        return "^[a-zA-Z][a-zA-Z0-9]*$";
+        return "^[1-9]?[a-zA-Z]+[0-9]?$";
     }
 
     public static String getDefineConstantes() {
-        return "^\\d+$";
+        return "^(0[1-9]|[1-9]\\d*)$";
     }
 
     public static String[] getDefineOperadores() {
-        return new String[]{"+", "-", "*", "/", "%", "--", "++", "<", ">", "<=", ">=", "^", "!="};
+        return new String[]{"+", "-", "*", "/", "%", "--", "++", "=","<", ">", "<=", ">=", "^", "!="};
     }
 
     public static String[] getDefineSeperadores() {
@@ -43,7 +43,7 @@ public class Lexico {
     }
 
     private void compoeAnalise(String id, String lexema, String token) {
-        this.analise = this.analise.concat("id : " + id + " Lexema : " + lexema + " Token :" + token + "\n");
+        this.analise = this.analise.concat("id : " + id + " Lexema : " + lexema + " Token : " + token + "\n");
     }
 
     public String analisa(String texto) {
@@ -51,38 +51,45 @@ public class Lexico {
         int tamanhoSentenca = sentenca.length;
 
         for (int i = 0; i < tamanhoSentenca; i++) {
-            String token = verificaIdentificadores(sentenca[i]);
+            String palavra = sentenca[i].trim(); // Remove espaços em branco no início e no fim da palavra
+            if (palavra.isEmpty()) {
+                continue; // Ignora palavras vazias
+            }
+            
+            String token = verificaReservadas(palavra);
             if (token.length() > 0) {
-                compoeAnalise("" + i, sentenca[i], token);
+                compoeAnalise("" + i, palavra, token);
                 continue;
             }
 
-            token = verificaConstantes(sentenca[i]);
+            token = verificaConstantes(palavra);
             if (token.length() > 0) {
-                compoeAnalise("" + i, sentenca[i], token);
+                compoeAnalise("" + i, palavra, token);
+                continue;
+            }
+            
+            token = verificaIdentificadores(palavra);
+            if (token.length() > 0) {
+                compoeAnalise("" + i, palavra, token);
                 continue;
             }
 
-            token = verificaOperadores(sentenca[i]);
+            token = verificaOperadores(palavra);
             if (token.length() > 0) {
-                compoeAnalise("" + i, sentenca[i], token);
+                compoeAnalise("" + i, palavra, token);
                 continue;
             }
 
-            token = verificaSeparadores(sentenca[i]);
+            token = verificaSeparadores(palavra);
             if (token.length() > 0) {
-                compoeAnalise("" + i, sentenca[i], token);
+                compoeAnalise("" + i, palavra, token);
                 continue;
             }
 
-            token = verificaReservadas(sentenca[i]);
-            if (token.length() > 0) {
-                compoeAnalise("" + i, sentenca[i], token);
-                continue;
-            }
+           
 
             // Caso nenhum token seja encontrado, trata-se de um erro ou palavra desconhecida
-            compoeAnalise("\n" + i, sentenca[i], "ERRO/DESCONHECIDO");
+            compoeAnalise("" + i, palavra, "ERRO/DESCONHECIDO");
         }
 
         return this.analise;
@@ -96,8 +103,8 @@ public class Lexico {
     }
 
     private String verificaConstantes(String texto) {
-        if (texto.matches(constante)) {
-            return "Palavra";
+        if (texto.matches(Lexico.getDefineConstantes())) {
+            return "Constante";
         }
         return "";
     }
@@ -105,7 +112,7 @@ public class Lexico {
     private String verificaOperadores(String texto) {
         for (String operador : operadores) {
             if (texto.equals(operador)) {
-                return operador;
+                return "Operador";
             }
         }
 
@@ -115,7 +122,7 @@ public class Lexico {
     private String verificaSeparadores(String texto) {
         for (String separador : sepadores) {
             if (texto.equals(separador)) {
-                return separador;
+                return "Separador";
             }
         }
 
@@ -125,7 +132,7 @@ public class Lexico {
     private String verificaReservadas(String texto) {
         for (String reservada : reservadas) {
             if (texto.equals(reservada)) {
-                return reservada;
+                return "Reservada";
             }
         }
 
