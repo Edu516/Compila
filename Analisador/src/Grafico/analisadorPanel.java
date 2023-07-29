@@ -93,13 +93,11 @@ public class analisadorPanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // Obtém o texto digitado na jTextArea1
         String textoDigitado = jTextArea1.getText();
         
         Lexico lexico = new Lexico();
         String resultadoAnalise = lexico.analisa(textoDigitado);
         
-        // Agora você pode fazer o que quiser com o textoDigitado, como exibi-lo em jTextPane1
         jTextPane1.setText(resultadoAnalise);
     }//GEN-LAST:event_jButton1ActionPerformed
 
